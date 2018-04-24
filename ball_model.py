@@ -28,12 +28,12 @@ def generate_data(n, theta, v, var_z):
 class Sequence(nn.Module):
     def __init__(self):
         super(Sequence, self).__init__()
-        self.d = 60
+        self.d = 10
         self.lstm1 = nn.LSTMCell(2, self.d)
         self.lstm2 = nn.LSTMCell(self.d, self.d)
         self.linear = nn.Linear(self.d, 2)
 
-    def forward(self, input, future = 0):
+    def forward(self, input, future = 500):
         outputs = []
         # input.size(0) should be the batch size
         h_t = Variable(torch.zeros(input.size(0), self.d).double(), requires_grad=False)
@@ -113,7 +113,7 @@ if __name__ == "__main__":
         optimizer.step(closure)
         # begin to predict
         future = 1
-        pred = seq(test_input, future = future)
+        pred = seq(test_input, future = 500)
         loss = criterion(pred[:, :-future], test_target)
         print('test loss:', loss.data.numpy()[0])
         y = pred.data.numpy()
