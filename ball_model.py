@@ -112,8 +112,8 @@ if __name__ == "__main__":
             return loss
         optimizer.step(closure)
         # begin to predict
-        future = 1
-        pred = seq(test_input, future = 500)
+        future = 500
+        pred = seq(test_input, future = future)
         loss = criterion(pred[:, :-future], test_target)
         print('test loss:', loss.data.numpy()[0])
         y = pred.data.numpy()
