@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
+import torch
 import torch.nn as nn
 from torch.autograd import Variable
 import torch.optim as optim
@@ -28,7 +28,7 @@ def generate_data(n, theta, v, var_z):
 class Sequence(nn.Module):
     def __init__(self):
         super(Sequence, self).__init__()
-        self.d = 2
+        self.d = 60
         self.lstm1 = nn.LSTMCell(2, self.d)
         self.lstm2 = nn.LSTMCell(self.d, self.d)
         self.linear = nn.Linear(self.d, 2)
