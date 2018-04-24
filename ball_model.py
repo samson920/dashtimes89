@@ -33,7 +33,7 @@ class Sequence(nn.Module):
         self.lstm2 = nn.LSTMCell(self.d, self.d)
         self.linear = nn.Linear(self.d, 2)
 
-    def forward(self, input, future = 500):
+    def forward(self, input, future = 0):
         outputs = []
         # input.size(0) should be the batch size
         h_t = Variable(torch.zeros(input.size(0), self.d).double(), requires_grad=False)
