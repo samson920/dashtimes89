@@ -14,6 +14,15 @@ The goal of PTB is to train a language model to predict the next word.
 """
 
 def data_generator(args):
+
+    with open('E_coli_K-12_MG1655_U000962.txt', 'r') as myfile:
+        raw_data = myfile.read().replace('\n', '')
+    codon_data = []
+    for i in range(0,int(np.floor(len(raw_data)-1)/3)):
+        codon_data += [raw_data[(3*i):(3*i+3)]]
+    codon_data = codon_data.reshape(len(codon_data),1)
+    
+
     if os.path.exists(args.data + "/corpus") and not args.corpus:
         corpus = pickle.load(open(args.data + '/corpus', 'rb'))
     else:
@@ -25,6 +34,7 @@ def data_generator(args):
     train_data = batchify(corpus.train, args.batch_size, args)
     val_data = [[0] * (args.seq_len-len(line)) + line for line in corpus.valid]
     test_data = [[0] * (args.seq_len-len(line)) + line for line in corpus.test]
+    print(train_data.shape, val_data.shape, test_data.shape, corpus)
     return train_data, val_data, test_data, corpus
 
 
