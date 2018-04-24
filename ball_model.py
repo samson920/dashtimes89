@@ -33,7 +33,7 @@ class Sequence(nn.Module):
         self.lstm2 = nn.LSTMCell(self.d, self.d)
         self.linear = nn.Linear(self.d, 2)
 
-    def forward(self, input, future = 500):
+    def forward(self, input, future = 0):
         outputs = []
         # input.size(0) should be the batch size
         h_t = Variable(torch.zeros(input.size(0), self.d).double(), requires_grad=False)
@@ -112,8 +112,8 @@ if __name__ == "__main__":
             return loss
         optimizer.step(closure)
         # begin to predict
-        future = 1
-        pred = seq(test_input, future = 500)
+        future = 500
+        pred = seq(test_input, future = future)
         loss = criterion(pred[:, :-future], test_target)
         print('test loss:', loss.data.numpy()[0])
         y = pred.data.numpy()
