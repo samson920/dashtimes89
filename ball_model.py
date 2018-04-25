@@ -28,7 +28,7 @@ def generate_data(n, theta, v, var_z):
 class Sequence(nn.Module):
     def __init__(self):
         super(Sequence, self).__init__()
-        self.d = 10
+        self.d = 50
         self.lstm1 = nn.LSTMCell(2, self.d)
         self.lstm2 = nn.LSTMCell(self.d, self.d)
         self.linear = nn.Linear(self.d, 2)
