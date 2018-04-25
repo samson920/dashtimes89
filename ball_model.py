@@ -61,8 +61,8 @@ if __name__ == "__main__":
     noise_var = 0.0
 
     trajectories = []
-    for theta in np.linspace(2*np.pi/10, 4*np.pi/10, 15):
-        for v in np.linspace(12.0, 15.0, 15):
+    for theta in np.linspace(2*np.pi/10, 4*np.pi/10, 50):
+        for v in np.linspace(12.0, 15.0, 50):
             trajectories.append(generate_data(seq_length, theta, v, noise_var))
     for trajectory in trajectories:
         plt.plot(trajectory[:,0], trajectory[:,1])
@@ -75,7 +75,7 @@ if __name__ == "__main__":
 
 
     X = np.array(np.reshape(histories, (-1, seq_length - 1, 2)))
-    num_train = 200
+    num_train = 2000
     trainX = X[:num_train]
     testX = X[num_train:]
     Y = np.array(np.reshape(next_vals, (-1, seq_length - 1, 2)))
@@ -99,7 +99,7 @@ if __name__ == "__main__":
     optimizer = optim.LBFGS(seq.parameters(), lr=0.8)
     #begin to train
 
-    EPOCHS = 40
+    EPOCHS = 100
 
     for i in range(EPOCHS):
         print('STEP: ', i)
