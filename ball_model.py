@@ -98,11 +98,12 @@ if __name__ == "__main__":
     # use LBFGS as optimizer since we can load the whole data to train
     optimizer = optim.LBFGS(seq.parameters(), lr=0.8)
     #begin to train
+    best_loss = 1e8
 
     EPOCHS = 100
 
     for i in range(EPOCHS):
-        print('STEP: ', i)
+        print('EPOCH: ', i)
         def closure():
             optimizer.zero_grad()
             out = seq(input)
@@ -116,6 +117,13 @@ if __name__ == "__main__":
         pred = seq(test_input, future = future)
         loss = criterion(pred[:, :-future], test_target)
         print('test loss:', loss.data.numpy()[0])
+        # Save the model if the test loss is the best we've seen so far.
+        if loss < best_loss:
+            with open("model.pt", 'wb') as f:
+                print('Save model!\n')
+                torch.save(seq, f)
+            best_loss = loss
+
         y = pred.data.numpy()
         x = test_input.data.numpy()
         # draw the result
