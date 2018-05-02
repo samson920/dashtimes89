@@ -77,7 +77,7 @@ if __name__ == "__main__":
     # Load the best saved model.
     with open("model.pt", 'rb') as f:
         seq = torch.load(f)
-
+    
     # generate a single test trajectory to visualize.
     seq_length = 1000
     noise_var = 0.0
@@ -87,16 +87,18 @@ if __name__ == "__main__":
 
     # try to predict the entire trajectory with different amounts of input data.
     criterion = nn.MSELoss()
-    target_data = np.reshape(trajectory, (1, -1))
+    target_data = np.reshape(trajectory, (1, -1, 2))
     target = Variable(torch.from_numpy(target_data), requires_grad=False)
+    print(target.size())
     for input_length in range(50, seq_length, 50):
-        input_data = np.reshape(trajectory[:input_length, :], (1, -1))
+        input_data = np.reshape(trajectory[:input_length], (1, -1, 2))
         input = Variable(torch.from_numpy(input_data), requires_grad=False)
+        print(input.size())
 
         # begin to predict
         future = seq_length - input_length
-        pred = seq(input, future = future)
-        loss = criterion(pred, target)
+        pred = seq(target, future = future)
+        loss = criterion(input, target)
         print('total loss:', loss.cpu().data.numpy())
 
         y = pred.cpu().data.numpy()
