@@ -5,6 +5,10 @@ import torch.nn as nn
 from torch.autograd import Variable
 import torch.optim as optim
 
+use_cuda = torch.cuda.is_available()
+if use_cuda:
+    print("Using CUDA")
+    torch.set_default_tensor_type('torch.cuda.FloatTensor')
 
 def generate_data(n, theta, v, var_z):
     """
@@ -61,8 +65,8 @@ if __name__ == "__main__":
     noise_var = 0.0
 
     trajectories = []
-    for theta in np.linspace(2*np.pi/10, 4*np.pi/10, 50):
-        for v in np.linspace(12.0, 15.0, 50):
+    for theta in np.linspace(2*np.pi/10, 4*np.pi/10, 20):
+        for v in np.linspace(12.0, 15.0, 20):
             trajectories.append(generate_data(seq_length, theta, v, noise_var))
     for trajectory in trajectories:
         plt.plot(trajectory[:,0], trajectory[:,1])
@@ -75,7 +79,7 @@ if __name__ == "__main__":
 
 
     X = np.array(np.reshape(histories, (-1, seq_length - 1, 2)))
-    num_train = 2000
+    num_train = 300
     trainX = X[:num_train]
     testX = X[num_train:]
     Y = np.array(np.reshape(next_vals, (-1, seq_length - 1, 2)))
@@ -91,9 +95,17 @@ if __name__ == "__main__":
     target = Variable(torch.from_numpy(trainY), requires_grad=False)
     test_input = Variable(torch.from_numpy(testX), requires_grad=False)
     test_target = Variable(torch.from_numpy(testY), requires_grad=False)
+    if use_cuda:
+        input = input.cuda()
+        target = target.cuda()
+        test_input = test_input.cuda()
+        test_target = test_target.cuda()
     # build the model
     seq = Sequence()
     seq.double()
+    if use_cuda:
+        seq.cuda()
+        seq.double()
     criterion = nn.MSELoss()
     # use LBFGS as optimizer since we can load the whole data to train
     optimizer = optim.LBFGS(seq.parameters(), lr=0.8)
@@ -108,7 +120,7 @@ if __name__ == "__main__":
             optimizer.zero_grad()
             out = seq(input)
             loss = criterion(out, target)
-            print('loss:', loss.data.numpy()[0])
+            print('loss:', loss.cpu().data.numpy())
             loss.backward()
             return loss
         optimizer.step(closure)
@@ -116,7 +128,7 @@ if __name__ == "__main__":
         future = 500
         pred = seq(test_input, future = future)
         loss = criterion(pred[:, :-future], test_target)
-        print('test loss:', loss.data.numpy()[0])
+        print('test loss:', loss.cpu().data.numpy())
         # Save the model if the test loss is the best we've seen so far.
         if loss < best_loss:
             with open("model.pt", 'wb') as f:
@@ -124,8 +136,8 @@ if __name__ == "__main__":
                 torch.save(seq, f)
             best_loss = loss
 
-        y = pred.data.numpy()
-        x = test_input.data.numpy()
+        y = pred.cpu().data.numpy()
+        x = test_input.cpu().data.numpy()
         # draw the result
         plt.figure(figsize=(30,10))
         plt.title('Predict future values for time sequences\n(Dashlines are predicted values)', fontsize=30)
