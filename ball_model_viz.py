@@ -83,16 +83,17 @@ if __name__ == "__main__":
     noise_var = 0.0
     theta = np.pi/3
     v = 15.0
-    trajectory = np.array([generate_data(seq_length, theta, v, noise_var)])
+    trajectories = np.array([generate_data(seq_length, theta, v, noise_var)])
 
     # try to predict the entire trajectory with different amounts of input data.
     criterion = nn.MSELoss()
-    target_data = np.reshape(trajectory, (-1, seq_length, 2))
+    target_data = np.reshape(trajectories, (-1, seq_length, 2))
     target = Variable(torch.from_numpy(target_data), requires_grad=False)
     print(target.size())
     for input_length in range(50, seq_length, 50):
-        input_data = np.reshape(trajectory[:input_length], (-1, input_length, 2))
+        input_data = np.reshape(trajectories[:, :input_length], (-1, input_length, 2))
         input = Variable(torch.from_numpy(input_data), requires_grad=False)
+        print(input)
         print(input.size())
 
         # begin to predict
