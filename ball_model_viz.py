@@ -83,7 +83,7 @@ if __name__ == "__main__":
     noise_var = 0.0
     theta = np.pi/3
     v = 15.0
-    trajectory = generate_data(seq_length, theta, v, noise_var)
+    trajectory = np.array([generate_data(seq_length, theta, v, noise_var)])
 
     # try to predict the entire trajectory with different amounts of input data.
     criterion = nn.MSELoss()
