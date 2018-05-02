@@ -101,11 +101,13 @@ if __name__ == "__main__":
         test_input = test_input.cuda()
         test_target = test_target.cuda()
     # build the model
-    seq = Sequence()
-    seq.double()
-    if use_cuda:
-        seq.cuda()
-        seq.double()
+    #seq = Sequence()
+    #seq.double()
+    # if use_cuda:
+    #     seq.cuda()
+    #     seq.double()
+    with open("model.pt", 'rb') as f:
+        seq = torch.load(f)
     criterion = nn.MSELoss()
     # use LBFGS as optimizer since we can load the whole data to train
     optimizer = optim.LBFGS(seq.parameters(), lr=0.8)
@@ -116,14 +118,14 @@ if __name__ == "__main__":
 
     for i in range(EPOCHS):
         print('EPOCH: ', i)
-        def closure():
-            optimizer.zero_grad()
-            out = seq(input)
-            loss = criterion(out, target)
-            print('loss:', loss.cpu().data.numpy())
-            loss.backward()
-            return loss
-        optimizer.step(closure)
+        # def closure():
+        #     optimizer.zero_grad()
+        #     out = seq(input)
+        #     loss = criterion(out, target)
+        #     print('loss:', loss.cpu().data.numpy())
+        #     loss.backward()
+        #     return loss
+        # optimizer.step(closure)
         # begin to predict
         future = 500
         pred = seq(test_input, future = future)
