@@ -91,7 +91,7 @@ if __name__ == "__main__":
     levels = 10 # num layers
     channel_sizes = [num_hidden]*levels
     kernel_size = 8
-    seq = TCN(1, input_size, channel_sizes, kernel_size, dropout=0.0)
+    seq = TCN(input_size, input_size, channel_sizes, kernel_size, dropout=0.0)
     if use_cuda:
         seq.cuda()
     criterion = nn.MSELoss()
