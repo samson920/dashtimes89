@@ -136,5 +136,5 @@ if __name__ == "__main__":
         draw(x[1], 'g')
         draw(y[2], 'b:')
         draw(x[2], 'b')
-        plt.savefig('plots/leakyrelu0.5_tcn_predict{}.pdf'.format(i))
+        plt.savefig('plots/leakyrelu1_tcn_predict{}.pdf'.format(i))
         plt.close()
