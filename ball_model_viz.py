@@ -121,6 +121,6 @@ if __name__ == "__main__":
         plt.xticks(fontsize=20)
         plt.yticks(fontsize=20)
         plt.plot(y[:, 0], y[:, 1], 'r', linewidth = 2.0)
-        plt.plot(x[:,0], x[:, 1], 'g:', linewidth = 2.0)
+        plt.plot(x[:,0], x[:, 1], 'g', linewidth = 2.0)
         plt.savefig('plots/viz_interp{}.pdf'.format(future))
         plt.close()
