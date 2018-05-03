@@ -90,7 +90,7 @@ if __name__ == "__main__":
     target = torch.transpose(target, 1, 2)
     test_input = torch.transpose(test_input, 1, 2)
     test_target = torch.transpose(test_target, 1, 2)
-
+    print(input.size(), target.size())
     # build the model
     input_size = 2 # dimension of each sequence element
     num_hidden = 8 # num hidden units per layer
@@ -141,8 +141,7 @@ if __name__ == "__main__":
         plt.xticks(fontsize=20)
         plt.yticks(fontsize=20)
         def draw(yi, color):
-            plt.plot(yi[:-1, 0], yi[:-1, 1], color, linewidth = 2.0)
-            #plt.plot(yi[-1,0], yi[-1:1], color + ':', linewidth = 2.0)
+            plt.plot(yi[0, :], yi[1, :], color, linewidth = 2.0) # notice we transposed the channels and length
         draw(y[0], 'r:')
         draw(x[0], 'r')
         draw(y[1], 'g:')
