@@ -78,24 +78,30 @@ if __name__ == "__main__":
     with open("model.pt", 'rb') as f:
         seq = torch.load(f)
 
-    # generate a single test trajectory to visualize.
-    seq_length = 1000
+    # generate a single trajectory and take different k-mers of it.
+    seq_length = 2000
     noise_var = 0.0
-    theta = np.pi/3
-    v = 15.0
-    trajectory = generate_data(seq_length, theta, v, noise_var)
-    trajectories = [trajectory]
+
+    trajectories = []
+    trajectories.append(generate_data(seq_length, np.pi/3, 15.0, noise_var))
+
+    np.random.seed(0)
+
+    histories = [trajectory[:-1] for trajectory in trajectories]
+    next_vals = [trajectory[1:] for trajectory in trajectories]
+
+    X = np.array(np.reshape(histories, (-1, seq_length - 1, 2)))
+    Y = np.array(np.reshape(next_vals, (-1, seq_length - 1, 2)))
+    print(Y.shape)
 
     # try to predict the entire trajectory with different amounts of input data.
     criterion = nn.MSELoss()
-    target_data = np.array(np.reshape(trajectories, (-1, seq_length, 2)))
-    target = Variable(torch.from_numpy(target_data), requires_grad=False)
+    target = Variable(torch.from_numpy(Y), requires_grad=False)
     seq(target, future = 500)
     print(target.size())
     for input_length in range(50, seq_length, 50):
-        input_data = np.reshape(trajectories[:, :input_length], (-1, input_length, 2))
+        input_data = X[:,:input_length,:]
         input = Variable(torch.from_numpy(input_data), requires_grad=False)
-        print(input)
         print(input.size())
 
         # begin to predict
