@@ -103,7 +103,7 @@ if __name__ == "__main__":
     seq.double()
     criterion = nn.MSELoss()
     # use LBFGS as optimizer since we can load the whole data to train
-    optimizer = optim.LBFGS(seq.parameters(), lr=0.8)
+    optimizer = optim.LBFGS(seq.parameters(), lr=0.08)
     #begin to train
     best_loss = 1e8
 
@@ -115,6 +115,7 @@ if __name__ == "__main__":
             optimizer.zero_grad()
             out = seq(input)
             out = torch.transpose(out, 1, 2)
+            #print(out[0])
             loss = criterion(out, target)
             print('loss:', loss.cpu().data.numpy())
             loss.backward()
