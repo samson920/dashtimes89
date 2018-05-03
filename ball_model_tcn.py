@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 import torch.optim as optim
-from tcn import TemporalConvNet
+from tcn import TemporalConvNet as TCN
 
 use_cuda = torch.cuda.is_available()
 if use_cuda:
@@ -29,22 +29,6 @@ def generate_data(n, theta, v, var_z):
         X[i, 0] = x1_t + np.random.normal(0, var_z)
         X[i, 1] = x2_t + np.random.normal(0, var_z)
     return X
-
-class TCN(nn.Module):
-    def __init__(self, input_size, output_size, num_channels, kernel_size, dropout):
-        super(TCN, self).__init__()
-        self.tcn = TemporalConvNet(input_size, num_channels, kernel_size=kernel_size, dropout=dropout)
-        self.linear = nn.Linear(num_channels[-1], output_size)
-        self.init_weights()
-
-    def init_weights(self):
-        self.linear.weight.data.normal_(0, 0.01)
-
-    def forward(self, x, future = 0):
-        y1 = self.tcn(x, future) # y1 is in format (batch_size, n_channels, seq_length)
-        # output is in format (batch_size, seq_length, n_channels)
-        # linear layer only gets applied to the last dimension! (element-wise in the sequence)
-        return self.linear(y1.transpose(1, 2))
 
 if __name__ == "__main__":
     seq_length = 1000
