@@ -106,7 +106,7 @@ if __name__ == "__main__":
         print('EPOCH: ', i)
         def closure():
             optimizer.zero_grad()
-            out = seq(input)
+            out = seq(input.unsqueeze(1).contiguous())
             loss = criterion(out, target)
             print('loss:', loss.cpu().data.numpy())
             loss.backward()
@@ -114,7 +114,7 @@ if __name__ == "__main__":
         optimizer.step(closure)
         # begin to predict
         future = 500
-        pred = seq(test_input, future = future)
+        pred = seq(test_input.unsqueeze(1).contiguous(), future = future)
         loss = criterion(pred[:, :-future], test_target)
         print('test loss:', loss.cpu().data.numpy())
         # Save the model if the test loss is the best we've seen so far.
