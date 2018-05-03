@@ -61,7 +61,7 @@ class Sequence(nn.Module):
         return outputs
 
 if __name__ == "__main__":
-    seq_length = 1000
+    seq_length = 500
     noise_var = 0.0
 
     trajectories = []
