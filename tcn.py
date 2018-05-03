@@ -63,14 +63,14 @@ class TemporalConvNet(nn.Module):
     def forward(self, x, future = 0):
         gt_outputs = self.network(x) # outputs when fed in ground truth sequence
         outputs = [gt_outputs]
-        last_pred = gt_outputs[:, -1]
+        last_pred = gt_outputs[:,:,-1]
         # now do future prediction
         # feed in the last output as the last input and perform a single convolution
         # at the end of each layer's sequence to get an additional prediction
         for i in range(future):
-            last_pred = torch.transpose(last_pred, 1, 2) # transpose to turn to (batch_size, channels, seq_len) format
-            x = torch.cat((x[:,:,-self.unit_input_length:], last_pred), 2)
-            last_pred = self.network(x)
+            # output is in (batch_size, channels, seq_len) format
+            x = torch.cat((x[:,:,-self.unit_input_length:], last_pred), 2) # concatenate along seq_len
+            last_pred = self.network(x) # last dimension should be 1!
             outputs.append(last_pred)
 
-        return torch.cat(outputs, 1) # outputs are in (batch_size, seq_len, channels) format
+        return torch.cat(outputs, 2)

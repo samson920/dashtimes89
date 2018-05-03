@@ -40,8 +40,10 @@ class TCN(nn.Module):
     def init_weights(self):
         self.linear.weight.data.normal_(0, 0.01)
 
-    def forward(self, x):
-        y1 = self.tcn(x)
+    def forward(self, x, future = 0):
+        y1 = self.tcn(x, future) # y1 is in format (batch_size, n_channels, seq_length)
+        # output is in format (batch_size, seq_length, n_channels)
+        # linear layer only gets applied to the last dimension! (element-wise in the sequence)
         return self.linear(y1.transpose(1, 2))
 
 if __name__ == "__main__":
