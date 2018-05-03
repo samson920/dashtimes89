@@ -86,10 +86,10 @@ if __name__ == "__main__":
         test_target = test_target.cuda()
     # Conv1d input format is (batch_size, num_channels, seq_length)
     # so we have to transpose the second and third dimensions of the vars
-    input = torch.transpose(input)
-    target = torch.transpose(target)
-    test_input = torch.transpose(test_input)
-    test_target = torch.transpose(test_target)
+    input = torch.transpose(input, 1, 2)
+    target = torch.transpose(target, 1, 2)
+    test_input = torch.transpose(test_input, 1, 2)
+    test_target = torch.transpose(test_target, 1, 2)
 
     # build the model
     input_size = 2 # dimension of each sequence element
