@@ -84,6 +84,12 @@ if __name__ == "__main__":
         target = target.cuda()
         test_input = test_input.cuda()
         test_target = test_target.cuda()
+    # Conv1d input format is (batch_size, num_channels, seq_length)
+    # so we have to transpose the second and third dimensions of the vars
+    input = torch.transpose(input)
+    target = torch.transpose(target)
+    test_input = torch.transpose(test_input)
+    test_target = torch.transpose(test_target)
 
     # build the model
     input_size = 2 # dimension of each sequence element
@@ -106,7 +112,7 @@ if __name__ == "__main__":
         print('EPOCH: ', i)
         def closure():
             optimizer.zero_grad()
-            out = seq(input.unsqueeze(1).contiguous())
+            out = seq(input)
             loss = criterion(out, target)
             print('loss:', loss.cpu().data.numpy())
             loss.backward()
@@ -114,7 +120,7 @@ if __name__ == "__main__":
         optimizer.step(closure)
         # begin to predict
         future = 500
-        pred = seq(test_input.unsqueeze(1).contiguous(), future = future)
+        pred = seq(test_input, future = future)
         loss = criterion(pred[:, :-future], test_target)
         print('test loss:', loss.cpu().data.numpy())
         # Save the model if the test loss is the best we've seen so far.
