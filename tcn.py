@@ -58,6 +58,19 @@ class TemporalConvNet(nn.Module):
                                      padding=(kernel_size-1) * dilation_size, dropout=dropout)]
 
         self.network = nn.Sequential(*layers)
+        self.unit_input_length = kernel_size * dilation_size # save the min length required for 1 conv1d output
 
-    def forward(self, x):
-        return self.network(x)
+    def forward(self, x, future = 0):
+        gt_outputs = self.network(x) # outputs when fed in ground truth sequence
+        outputs = [gt_outputs]
+        last_pred = gt_outputs[:, -1]
+        # now do future prediction
+        # feed in the last output as the last input and perform a single convolution
+        # at the end of each layer's sequence to get an additional prediction
+        for i in range(future):
+            last_pred = torch.transpose(last_pred, 1, 2) # transpose to turn to (batch_size, channels, seq_len) format
+            x = torch.cat((x[:,:,-self.unit_input_length:], last_pred), 2)
+            last_pred = self.network(x)
+            outputs.append(last_pred)
+
+        return torch.cat(outputs, 1) # outputs are in (batch_size, seq_len, channels) format
