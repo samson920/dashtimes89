@@ -18,7 +18,7 @@ def generate_data(n, theta, v, var_z):
     @param v - initial velocity in m/s
     @param var_z - variance of the scalar noise
     """
-    dt = 0.001
+    dt = 0.01
     g = 9.81
     X = np.zeros((n, 2))
     for i in range(0, n):
@@ -61,7 +61,7 @@ class Sequence(nn.Module):
         return outputs
 
 if __name__ == "__main__":
-    seq_length = 2000
+    seq_length = 200
     noise_var = 0.0
 
     trajectories = []
@@ -112,7 +112,7 @@ if __name__ == "__main__":
     #begin to train
     best_loss = 1e8
 
-    EPOCHS = 25
+    EPOCHS = 100
 
     for i in range(EPOCHS):
         print('EPOCH: ', i)
