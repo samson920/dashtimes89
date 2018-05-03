@@ -114,15 +114,16 @@ if __name__ == "__main__":
         def closure():
             optimizer.zero_grad()
             out = seq(input)
+            out = torch.transpose(out, 1, 2)
             loss = criterion(out, target)
             print('loss:', loss.cpu().data.numpy())
             loss.backward()
             return loss
         optimizer.step(closure)
         # begin to predict
-        future = 500
-        pred = seq(test_input, future = future)
-        loss = criterion(pred[:, :-future], test_target)
+        pred = seq(test_input)
+        pred = torch.transpose(pred, 1, 2)
+        loss = criterion(pred, test_target)
         print('test loss:', loss.cpu().data.numpy())
         # Save the model if the test loss is the best we've seen so far.
         if loss < best_loss:
@@ -135,7 +136,7 @@ if __name__ == "__main__":
         x = test_input.cpu().data.numpy()
         # draw the result
         plt.figure(figsize=(30,10))
-        plt.title('Predict future values for time sequences\n(Dashlines are predicted values)', fontsize=30)
+        plt.title('Predict values for time sequences\n(Dashlines are predicted values)', fontsize=30)
         plt.xlabel('x', fontsize=20)
         plt.ylabel('y', fontsize=20)
         plt.xticks(fontsize=20)
