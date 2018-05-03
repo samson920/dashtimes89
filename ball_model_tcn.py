@@ -122,8 +122,9 @@ if __name__ == "__main__":
             return loss
         optimizer.step(closure)
         # begin to predict
-        pred = seq(test_input)
-        pred = torch.transpose(pred, 1, 2)
+        future = 500
+        pred = seq(test_input, future = future)
+        pred = torch.transpose(pred[:, :-future], 1, 2)
         loss = criterion(pred, test_target)
         print('test loss:', loss.cpu().data.numpy())
         # Save the model if the test loss is the best we've seen so far.
