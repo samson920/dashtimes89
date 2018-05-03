@@ -55,7 +55,7 @@ class Sequence(nn.Module):
 
         #print(input.shape)
         for i, input_t in enumerate(input.chunk(input.size(1), dim=1)):
-            input_t = input_t.squeeze()
+            input_t = input_t.squeeze(0) # do not squeeze for single sample inference!
             h_t, c_t = self.lstm1(input_t, (h_t, c_t))
             h_t2, c_t2 = self.lstm2(h_t, (h_t2, c_t2))
             output = self.linear(h_t2)
@@ -97,17 +97,18 @@ if __name__ == "__main__":
     # try to predict the entire trajectory with different amounts of input data.
     criterion = nn.MSELoss()
     target = Variable(torch.from_numpy(Y), requires_grad=False)
-    seq(target, future = 500)
-    print(target.size())
+    target = target.cuda()
     for input_length in range(50, seq_length, 50):
         input_data = X[:,:input_length,:]
         input = Variable(torch.from_numpy(input_data), requires_grad=False)
+        input = input.cuda()
         print(input.size())
 
         # begin to predict
-        future = seq_length - input_length
-        pred = seq(target, future = future)
-        loss = criterion(input, target)
+        future = seq_length - input_length - 1
+        pred = seq(input, future = future)
+        print('k-mer fraction: {}/{}'.format(input_length, seq_length))
+        loss = criterion(pred, target)
         print('total loss:', loss.cpu().data.numpy())
 
         y = pred.cpu().data.numpy()
@@ -121,5 +122,5 @@ if __name__ == "__main__":
         plt.yticks(fontsize=20)
         plt.plot(y[:, 0], y[:, 1], 'r', linewidth = 2.0)
         plt.plot(x[:,0], x[:, 1], 'g', linewidth = 2.0)
-        plt.savefig('plots/viz_interp{}.pdf'.format(i))
+        plt.savefig('plots/viz_interp{}.pdf'.format(future))
         plt.close()
