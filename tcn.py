@@ -69,6 +69,7 @@ class TemporalConvNet(nn.Module):
         # at the end of each layer's sequence to get an additional prediction
         for i in range(future):
             # output is in (batch_size, channels, seq_len) format
+            print(x.size(), last_pred.size())
             x = torch.cat((x[:,:,-self.unit_input_length:], last_pred), 2) # concatenate along seq_len
             last_pred = self.network(x) # last dimension should be 1!
             outputs.append(last_pred)
