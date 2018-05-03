@@ -111,8 +111,8 @@ if __name__ == "__main__":
         loss = criterion(pred, target)
         print('total loss:', loss.cpu().data.numpy())
 
-        y = pred.cpu().data.numpy()
-        x = input.cpu().data.numpy()
+        y = pred.cpu().data.numpy()[0]
+        x = input.cpu().data.numpy()[0]
         # draw the result
         plt.figure(figsize=(30,10))
         plt.title('Predict future values for time sequences\n(green is ground truth)', fontsize=30)
