@@ -63,8 +63,8 @@ if __name__ == "__main__":
     # load data and make training set
     input = Variable(torch.from_numpy(trainX), requires_grad=False)
     target = Variable(torch.from_numpy(trainY), requires_grad=False)
-    test_input = Variable(torch.from_numpy(testX), requires_grad=False)
-    test_target = Variable(torch.from_numpy(testY), requires_grad=False)
+    test_input = Variable(torch.from_numpy(testX), requires_grad=False, volatile=True)
+    test_target = Variable(torch.from_numpy(testY), requires_grad=False, volatile=True)
     if use_cuda:
         input = input.cuda()
         target = target.cuda()
