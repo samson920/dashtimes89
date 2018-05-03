@@ -100,7 +100,6 @@ if __name__ == "__main__":
         def closure():
             optimizer.zero_grad()
             out = seq(input)
-            out = torch.transpose(out, 1, 2)
             #print(out[0])
             loss = criterion(out, target)
             print('loss:', loss.cpu().data.numpy())
