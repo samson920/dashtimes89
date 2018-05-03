@@ -140,7 +140,7 @@ if __name__ == "__main__":
         x = test_input.cpu().data.numpy()
         # draw the result
         plt.figure(figsize=(30,10))
-        plt.title('Predict future values for time sequences\n(Dashlines are predicted values)', fontsize=30)
+        plt.title('Sample Training Trajectories', fontsize=30)
         plt.xlabel('x', fontsize=20)
         plt.ylabel('y', fontsize=20)
         plt.xticks(fontsize=20)
@@ -148,11 +148,8 @@ if __name__ == "__main__":
         def draw(yi, color):
             plt.plot(yi[:-1, 0], yi[:-1, 1], color, linewidth = 2.0)
             #plt.plot(yi[-1,0], yi[-1:1], color + ':', linewidth = 2.0)
-        draw(y[0], 'r:')
         draw(x[0], 'r')
-        draw(y[1], 'g:')
         draw(x[1], 'g')
-        draw(y[2], 'b:')
         draw(x[2], 'b')
         plt.savefig('plots/predict{}.pdf'.format(i))
         plt.close()
