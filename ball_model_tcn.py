@@ -100,6 +100,7 @@ if __name__ == "__main__":
     seq = TCN(input_size, input_size, channel_sizes, kernel_size, dropout=0.0)
     if use_cuda:
         seq.cuda()
+    seq.double()
     criterion = nn.MSELoss()
     # use LBFGS as optimizer since we can load the whole data to train
     optimizer = optim.LBFGS(seq.parameters(), lr=0.8)
