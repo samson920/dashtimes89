@@ -61,7 +61,7 @@ class Sequence(nn.Module):
         return outputs
 
 if __name__ == "__main__":
-    seq_length = 1000
+    seq_length = 2000
     noise_var = 0.0
 
     trajectories = []
@@ -112,7 +112,7 @@ if __name__ == "__main__":
     #begin to train
     best_loss = 1e8
 
-    EPOCHS = 100
+    EPOCHS = 25
 
     for i in range(EPOCHS):
         print('EPOCH: ', i)
@@ -125,7 +125,7 @@ if __name__ == "__main__":
             return loss
         optimizer.step(closure)
         # begin to predict
-        future = 500
+        future = 1
         pred = seq(test_input, future = future)
         loss = criterion(pred[:, :-future], test_target)
         print('test loss:', loss.cpu().data.numpy())
@@ -140,7 +140,7 @@ if __name__ == "__main__":
         x = test_input.cpu().data.numpy()
         # draw the result
         plt.figure(figsize=(30,10))
-        plt.title('Predict future values for time sequences\n(Dashlines are predicted values)', fontsize=30)
+        plt.title('Trajectories\nDashed Line -- Predction\nSolid Line -- Training Data', fontsize=30)
         plt.xlabel('x', fontsize=20)
         plt.ylabel('y', fontsize=20)
         plt.xticks(fontsize=20)
