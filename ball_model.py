@@ -61,7 +61,7 @@ class Sequence(nn.Module):
         return outputs
 
 if __name__ == "__main__":
-    seq_length = 1000
+    seq_length = 2000
     noise_var = 0.0
 
     trajectories = []
@@ -125,7 +125,7 @@ if __name__ == "__main__":
             return loss
         optimizer.step(closure)
         # begin to predict
-        future = 500
+        future = 1
         pred = seq(test_input, future = future)
         loss = criterion(pred[:, :-future], test_target)
         print('test loss:', loss.cpu().data.numpy())
