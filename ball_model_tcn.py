@@ -33,7 +33,7 @@ def generate_data(n, theta, v, var_z):
 if __name__ == "__main__":
     seq_length = 2000
     noise_var = 0.0
-
+    #Generate data
     trajectories = []
     for theta in np.linspace(2*np.pi/10, 4*np.pi/10, 20):
         for v in np.linspace(12.0, 15.0, 20):
@@ -47,7 +47,7 @@ if __name__ == "__main__":
     histories = [trajectory[:-1] for trajectory in trajectories]
     next_vals = [trajectory[1:] for trajectory in trajectories]
 
-
+    #Split data into training and test set 
     X = np.array(np.reshape(histories, (-1, seq_length - 1, 2)))
     num_train = 300
     trainX = X[:num_train]
@@ -83,6 +83,7 @@ if __name__ == "__main__":
     levels = 10 # num layers
     channel_sizes = [num_hidden]*levels
     kernel_size = 8
+    #Use the TCN specified in tcn.py
     seq = TCN(input_size, input_size, channel_sizes, kernel_size, dropout=0.0)
     if use_cuda:
         seq.cuda()

@@ -36,7 +36,7 @@ class Sequence(nn.Module):
         self.lstm1 = nn.LSTMCell(2, self.d)
         self.lstm2 = nn.LSTMCell(self.d, self.d)
         self.linear = nn.Linear(self.d, 2)
-
+    #Runs the data through an LSTM based RNN 
     def forward(self, input, future = 0):
         outputs = []
         # input.size(0) should be the batch size
@@ -63,7 +63,7 @@ class Sequence(nn.Module):
 if __name__ == "__main__":
     seq_length = 2000
     noise_var = 0.0
-
+    #Creates  data
     trajectories = []
     for theta in np.linspace(2*np.pi/10, 4*np.pi/10, 20):
         for v in np.linspace(12.0, 15.0, 20):
@@ -77,7 +77,7 @@ if __name__ == "__main__":
     histories = [trajectory[:-1] for trajectory in trajectories]
     next_vals = [trajectory[1:] for trajectory in trajectories]
 
-
+    #Splits data into training and test set
     X = np.array(np.reshape(histories, (-1, seq_length - 1, 2)))
     num_train = 300
     trainX = X[:num_train]
@@ -113,7 +113,7 @@ if __name__ == "__main__":
     best_loss = 1e8
 
     EPOCHS = 16
-
+    #Trains for EPOCHS epochs
     for i in range(EPOCHS):
         print('EPOCH: ', i)
         def closure():

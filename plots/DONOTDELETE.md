@@ -1,0 +1,1 @@
+Do not delete this file unless you change the save path for the plots in the ball_model files. By default it writes all plots into this folder.
