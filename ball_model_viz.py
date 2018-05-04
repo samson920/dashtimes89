@@ -106,13 +106,12 @@ if __name__ == "__main__":
         print(input.size())
 
         # begin to predict
-        #future = seq_length - input_length - 1
-        future = 5000
+        future = seq_length - input_length - 1
         pred = seq(input, future = future)
         print('k-mer fraction: {}/{}'.format(input_length, seq_length))
-        #loss = criterion(pred, target)
-        #print('total loss:', loss.cpu().data.numpy())
-        #losses.append(loss)
+        loss = criterion(pred, target)
+        print('total loss:', loss.cpu().data.numpy())
+        losses.append(loss)
 
         y = pred.cpu().data.numpy()[0]
         x = input.cpu().data.numpy()[0]
@@ -125,14 +124,13 @@ if __name__ == "__main__":
         plt.plot(y[:, 0], y[:, 1], 'r', linewidth = 2.0, label = "Future prediction")
         plt.plot(x[:,0], x[:, 1], 'g', linewidth = 2.0, label = "Ground truth trajectory")
         plt.legend()
-        #plt.savefig('plots/viz_interp{}.png'.format(future))
-        plt.savefig('plots/far_future_1000.png')
+        plt.savefig('plots/viz_interp{}.png'.format(future))
         plt.close()
-    '''
+
+    # plot final losses as a function of ground-truth sequence length.
     plt.figure()
     plt.xlabel('Given ground-truth sequence length')
     plt.ylabel('Total loss')
     plt.plot(list(range(50, seq_length, 50)), losses)
     plt.savefig('plots/viz_total_loss_interp.png')
     plt.close()
-    '''
