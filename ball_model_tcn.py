@@ -31,7 +31,7 @@ def generate_data(n, theta, v, var_z):
     return X
 
 if __name__ == "__main__":
-    seq_length = 1000
+    seq_length = 2000
     noise_var = 0.0
 
     trajectories = []
@@ -93,7 +93,7 @@ if __name__ == "__main__":
     #begin to train
     best_loss = 1e8
 
-    EPOCHS = 100
+    EPOCHS = 16
 
     for i in range(EPOCHS):
         print('EPOCH: ', i)
@@ -107,9 +107,9 @@ if __name__ == "__main__":
             return loss
         optimizer.step(closure)
         # begin to predict
-        future = 500
+        future = 0
         pred = seq(test_input, future = future)
-        pred = torch.transpose(pred[:, :-future], 1, 2)
+        #pred = torch.transpose(pred[:, :-future], 1, 2)
         loss = criterion(pred, test_target)
         print('test loss:', loss.cpu().data.numpy())
         # Save the model if the test loss is the best we've seen so far.
@@ -136,5 +136,5 @@ if __name__ == "__main__":
         draw(x[1], 'g')
         draw(y[2], 'b:')
         draw(x[2], 'b')
-        plt.savefig('plots/tcn_predict{}.pdf'.format(i))
+        plt.savefig('plots/tcn_predict{}.png'.format(i))
         plt.close()
