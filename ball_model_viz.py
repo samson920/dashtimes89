@@ -107,7 +107,7 @@ if __name__ == "__main__":
 
         # begin to predict
         #future = seq_length - input_length - 1
-        future = 1000
+        future = 5000
         pred = seq(input, future = future)
         print('k-mer fraction: {}/{}'.format(input_length, seq_length))
         #loss = criterion(pred, target)
