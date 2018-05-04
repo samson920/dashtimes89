@@ -98,6 +98,7 @@ if __name__ == "__main__":
     criterion = nn.MSELoss()
     target = Variable(torch.from_numpy(Y), requires_grad=False)
     target = target.cuda()
+    losses = []
     for input_length in range(50, seq_length, 50):
         input_data = X[:,:input_length,:]
         input = Variable(torch.from_numpy(input_data), requires_grad=False)
@@ -110,17 +111,24 @@ if __name__ == "__main__":
         print('k-mer fraction: {}/{}'.format(input_length, seq_length))
         loss = criterion(pred, target)
         print('total loss:', loss.cpu().data.numpy())
+        losses.append(loss)
 
         y = pred.cpu().data.numpy()[0]
         x = input.cpu().data.numpy()[0]
         # draw the result
         plt.figure(figsize=(30,10))
-        plt.title('Predict future values for time sequences\n(green is ground truth)', fontsize=30)
         plt.xlabel('x', fontsize=20)
         plt.ylabel('y', fontsize=20)
         plt.xticks(fontsize=20)
         plt.yticks(fontsize=20)
-        plt.plot(y[:, 0], y[:, 1], 'r', linewidth = 2.0)
-        plt.plot(x[:,0], x[:, 1], 'g', linewidth = 2.0)
-        plt.savefig('plots/viz_interp{}.pdf'.format(future))
+        plt.plot(y[:, 0], y[:, 1], 'r', linewidth = 2.0, label = "Future prediction")
+        plt.plot(x[:,0], x[:, 1], 'g', linewidth = 2.0, label = "Ground truth trajectory")
+        plt.legend()
+        plt.savefig('plots/viz_interp{}.png'.format(future))
         plt.close()
+    plt.figure()
+    plt.xlabel('Given ground-truth sequence length')
+    plt.ylabel('Total loss')
+    plt.plot(list(range(50, seq_length, 50)), losses)
+    plt.savefig('plots/viz_total_loss_interp.png')
+    plt.close()
