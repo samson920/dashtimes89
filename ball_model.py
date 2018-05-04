@@ -112,7 +112,7 @@ if __name__ == "__main__":
     #begin to train
     best_loss = 1e8
 
-    EPOCHS = 25
+    EPOCHS = 16
 
     for i in range(EPOCHS):
         print('EPOCH: ', i)
@@ -140,7 +140,6 @@ if __name__ == "__main__":
         x = test_input.cpu().data.numpy()
         # draw the result
         plt.figure(figsize=(30,10))
-        plt.title('Trajectories\nDashed Line -- Predction\nSolid Line -- Training Data', fontsize=30)
         plt.xlabel('x', fontsize=20)
         plt.ylabel('y', fontsize=20)
         plt.xticks(fontsize=20)
@@ -154,5 +153,6 @@ if __name__ == "__main__":
         draw(x[1], 'g')
         draw(y[2], 'b:')
         draw(x[2], 'b')
-        plt.savefig('plots/predict{}.pdf'.format(i))
+        if i in [3,7,15]:
+        	plt.savefig('plots/predict{}.pdf'.format(i))
         plt.close()
