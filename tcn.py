@@ -2,7 +2,8 @@ import torch
 import torch.nn as nn
 from torch.nn.utils import weight_norm
 
-#TCN starter code taken from Bai et al. (https://arxiv.org/abs/1803.01271)
+#TCN starter code taken from Bai et al. (https://arxiv.org/abs/1803.01271), 
+#See original code from authors: https://github.com/locuslab/TCN/blob/master/TCN/tcn.py
 
 class Chomp1d(nn.Module):
     def __init__(self, chomp_size):
