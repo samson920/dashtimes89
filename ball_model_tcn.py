@@ -5,7 +5,7 @@ import torch.nn as nn
 from torch.autograd import Variable
 import torch.optim as optim
 from tcn import TemporalConvNet as TCN
-
+#used Bai et al.'s TCN.py as a starting point
 use_cuda = torch.cuda.is_available()
 if use_cuda:
     print("Using CUDA")
