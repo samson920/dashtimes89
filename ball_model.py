@@ -154,5 +154,5 @@ if __name__ == "__main__":
         draw(y[2], 'b:')
         draw(x[2], 'b')
         if i in [3,7,15]:
-        	plt.savefig('plots/predict{}.pdf'.format(i))
+        	plt.savefig('plots/predict{}.png'.format(i))
         plt.close()
